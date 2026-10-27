@@ -3,8 +3,8 @@ const names=['plans','plan_versions','tasks','execution_logs','reviews'];
 const columns={plans:['title','start_date','end_date','priority','success_criteria','estimated_minutes','description'],tasks:['plan_id','title','description','due_date','priority','tags','estimated_minutes','status','deleted_at'],execution_logs:['task_id','started_at','ended_at','actual_minutes','blocker'],reviews:['plan_id','improvement']};
 export default async function handler(req,res){
  res.setHeader('Cache-Control','no-store');res.setHeader('X-Content-Type-Options','nosniff');
- if(!process.env.SUPABASE_URL||!process.env.SUPABASE_SERVICE_ROLE_KEY)return res.status(503).json({error:'Supabase 환경 변수가 필요합니다'});
- const db=createClient(process.env.SUPABASE_URL,process.env.SUPABASE_SERVICE_ROLE_KEY,{auth:{persistSession:false}});
+ if(!process.env.SUPABASE_URL||!process.env.SUPABASE_SECRET_KEY)return res.status(503).json({error:'Supabase 환경 변수가 필요합니다'});
+ const db=createClient(process.env.SUPABASE_URL,process.env.SUPABASE_SECRET_KEY,{auth:{persistSession:false}});
  const {table,id,action}=req.query;const validId=x=>/^[0-9a-f]{8}-[0-9a-f-]{27,}$/i.test(x||'');
  try{
  if(req.method==='GET'){
