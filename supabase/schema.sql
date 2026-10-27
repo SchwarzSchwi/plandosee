@@ -1,0 +1,6 @@
+create table plans(id uuid primary key default gen_random_uuid(),title text not null,start_date date,end_date date,priority text,success_criteria text,estimated_minutes int default 0,description text,created_at timestamptz default now());
+create table plan_versions(id uuid primary key default gen_random_uuid(),plan_id uuid references plans(id),snapshot jsonb not null,created_at timestamptz default now());
+create table tasks(id uuid primary key default gen_random_uuid(),plan_id uuid references plans(id),title text not null,description text,due_date date,priority text,tags text[],estimated_minutes int default 0,status text default 'progress',deleted_at timestamptz,created_at timestamptz default now());
+create table execution_logs(id uuid primary key default gen_random_uuid(),task_id uuid references tasks(id),started_at timestamptz,ended_at timestamptz,actual_minutes int,blocker text,created_at timestamptz default now());
+create table reviews(id uuid primary key default gen_random_uuid(),plan_id uuid references plans(id),improvement text,created_at timestamptz default now());
+alter table plans enable row level security;alter table plan_versions enable row level security;alter table tasks enable row level security;alter table execution_logs enable row level security;alter table reviews enable row level security;
