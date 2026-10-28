@@ -103,6 +103,12 @@ export function createHandler(getDatabase) {
       if (error) throw error;
       return res.json(data);
     } catch (error) {
+      console.error('[database-operation-failed]', {
+        method: req.method,
+        table: names.includes(table) ? table : undefined,
+        action: ['export', 'carry-forward'].includes(action) ? action : undefined,
+        code: typeof error?.code === 'string' ? error.code : 'UNKNOWN',
+      });
       if (error instanceof SyntaxError || error instanceof InputError) {
         return res.status(400).json({ error: error instanceof SyntaxError ? '잘못된 JSON입니다' : error.message });
       }
