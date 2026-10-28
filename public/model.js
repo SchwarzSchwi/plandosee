@@ -36,3 +36,38 @@ export function summarize(todos, logs, planId, today = seoulDate()) {
     work, expected, actual, difference: actual - expected,
   };
 }
+
+export const STUDY_QUESTION = '실행 규칙을 바꾼 뒤 하루 실제 실행 시간(분)은 어떻게 달라지는가?';
+export const STUDY_METRIC = 'actual_minutes';
+
+export function mondayStart(date = seoulDate()) {
+  const day = new Date(`${date}T00:00:00Z`);
+  day.setUTCDate(day.getUTCDate() - (day.getUTCDay() + 6) % 7);
+  return day.toISOString().slice(0, 10);
+}
+
+export function validateObservation(observations, minutes, today, createdDate, changed = false) {
+  if (!Number.isInteger(minutes) || minutes < 0 || minutes > 1440) throw Error('0~1440 사이 정수(분)를 입력하세요.');
+  if (today < createdDate) throw Error('연구 생성일 이전에는 관찰할 수 없습니다.');
+  if (observations.length >= 5) throw Error('관찰은 정확히 5일입니다.');
+  if (observations.some(item => item.observed_date === today)) throw Error('오늘 관찰은 이미 기록했습니다.');
+  if (observations.some(item => item.observed_date > today)) throw Error('미래 날짜의 관찰은 허용하지 않습니다.');
+  if (observations.length >= 2 && !changed) throw Error('3일차 전 실행 규칙 변경을 기록하세요.');
+}
+
+export function observationSummary(observations) {
+  const ordered = [...observations].sort((a, b) => a.observed_date.localeCompare(b.observed_date));
+  const unique = new Set(ordered.map(item => item.observed_date));
+  const valid = unique.size === ordered.length && ordered.length <= 5 && ordered.every(item =>
+    Number.isInteger(item.actual_minutes) && item.actual_minutes >= 0 && item.actual_minutes <= 1440);
+  if (!valid) throw Error('관찰 날짜 또는 분 값이 올바르지 않습니다.');
+  const group = items => ({
+    count: items.length,
+    sum: items.length ? items.reduce((sum, item) => sum + item.actual_minutes, 0) : null,
+    average: items.length ? Number((items.reduce((sum, item) => sum + item.actual_minutes, 0) / items.length).toFixed(2)) : null,
+  });
+  return {
+    complete: ordered.length === 5, remaining: 5 - ordered.length,
+    total: group(ordered), before: group(ordered.slice(0, 2)), after: group(ordered.slice(2)),
+  };
+}

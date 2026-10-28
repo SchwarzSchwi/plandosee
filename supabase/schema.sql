@@ -1,3 +1,7 @@
+-- Fresh install: run this T06 baseline, then migrations/002_t07_security.sql
+-- and migrations/003_t07_observations.sql in order in the Supabase SQL editor.
+-- Do not run 001_t06.sql after this baseline: its changes are already included.
+-- No application may use this baseline alone; T07 requires migration 002.
 begin;
 
 create table public.plans (
