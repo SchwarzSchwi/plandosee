@@ -1,1 +1,1 @@
-{"name":"plandosee","version":"1.0.0","type":"module","scripts":{"dev":"vercel dev","test":"node --test"},"dependencies":{"@supabase/supabase-js":"^2.49.0"},"devDependencies":{"vercel":"^48.0.0"}}
+{"name":"plandosee","version":"1.0.0","type":"module","engines":{"node":"22.x"},"scripts":{"dev":"vercel dev","test":"node --test","test:integration":"bash test/t07-integration.sh","audit:secrets":"node scripts/security-audit.js"},"dependencies":{"@supabase/supabase-js":"2.118.0"},"devDependencies":{"vercel":"48.12.1"}}

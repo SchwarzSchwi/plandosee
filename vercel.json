@@ -1,5 +1,9 @@
 {
   "outputDirectory": "public",
+  "rewrites": [
+    { "source": "/diary", "destination": "/index.html" },
+    { "source": "/diary/:path*", "destination": "/index.html" }
+  ],
   "headers": [
     {
       "source": "/(.*)",
