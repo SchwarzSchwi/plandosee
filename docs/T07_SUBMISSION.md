@@ -149,6 +149,7 @@ query/header의 타인 ID 무시 후 내 자료만·body 주입 거절, 원문 �
 - `npm run test:integration` / `bash test/t07-integration.sh`: 실제 격리 PostgreSQL + Node HTTP **1/1 통과**, 별도 SQL assertion 통과. 운영 Supabase HTTP 전송 대신 테스트용 psql adapter로 **실제 service_role SQL**을 호출하며 인증을 우회하지 않습니다.
 - 로컬 브라우저는 **모의 HTTP 응답**으로 `/`, `/diary`, `/diary/private-test` 최초 session 요청만, 실패 로그인 시 비밀번호 지움/포커스, 로그인 후 export/study, 로그아웃/비밀번호 변경/탈퇴 후 로그인 화면, 텍스트 기반 XSS 비실행을 확인했습니다. 브라우저→운영 DB 통합 테스트는 아닙니다.
 - 실제 Supabase/Vercel 인증정보가 없어 운영 DB/배포의 성공 응답은 아직 수집하지 않았습니다.
+- 커밋 후 CodeQL **JavaScript 분석 경고 0건**. 이는 SQL/운영 설정의 완전한 보안 증명이 아닙니다. 변경 파일 비밀 검사도 통과했습니다.
 
 실제 격리 DB에서 읽은 한 계정의 저장 형식(검증기 전체 공개를 피하기 위해 salt/파생값은 가림):
 ```text
